@@ -14,6 +14,8 @@ Vagrant.configure("2") do |config|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.56.10"
         master.vm.hostname = "k8s-master"
+        # port-forward testing  
+        master.vm.network "forwarded_port", guest: 7077, host: 7077
         # master.vm.provision "ansible" do |ansible|
         #     ansible.playbook = "kubernetes-setup/master-playbook.yml"
         # end
