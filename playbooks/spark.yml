@@ -1,0 +1,21 @@
+---
+- hosts: master_nodes
+  becomes: true
+  tasks:
+  - name: Copy manifests
+    srs: ../spark/'{{ file }}'
+    dest: /tmp/'{{ file }}'
+    remote_src: yes
+    vars:
+      file:
+      - spark-deployment.yaml
+      - spark-master-service.yaml
+
+  - name: Create Spark namespace
+    command: kubectl create namespace spark
+
+  - name: Apply Spark master service
+    command: kubectl apply -f /tmp/spark-master-service.yaml -n spark
+
+  - name: Apply Spark deployment
+    command: kubectl apply -f /tmp/spark-deployment.yaml -n spark
