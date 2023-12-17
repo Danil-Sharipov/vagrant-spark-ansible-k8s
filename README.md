@@ -2,9 +2,9 @@
 
 ## Deployment
 1) Для изменения количества VM измените переменную N в Vagrantfile.
-![alt text]('./screenshots/1-1.png')
+![alt text](./screenshots/1-1.png)
 2) Для изменения количества подов на кластере исправьте replicas в spark-deployment.yaml.
-![alt text]('./screenshots/1-2.png')
+![alt text](./screenshots/1-2.png)
 3) Выполните команду: 
 ```bash
 vagrant up && ansible-playbook -i inventory playbook.yml
@@ -44,7 +44,7 @@ kubectl get pod -n spark
 ```bash
 kubectl port-forward deployment/spark-master -n spark 8888:7077 
 ```
-![alt text]('./screenshots/1-5.png')
+![alt text](./screenshots/1-5.png)
 6) Для работы с хост машины надо пробросить порт для подключения к spark-master
 ```bash
 kubectl port-forward deployment/spark-master -n spark 7077:7077 
