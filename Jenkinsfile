@@ -14,12 +14,12 @@ pipeline {
         stage('merge'){
             steps{
                   // Переходим в ветку master
-                  sh "git checkout master"
+                  sh "git checkout -f master"
                   // Подтягиваем изменения из удаленного репозитория
                   sh "git pull origin master"
 
                   // Вливаем изменения из ветки dev
-                  sh "git merge dev"
+                  sh "git merge origin/dev"
 
                   // Отправляем изменения в удаленный репозиторий
                   sh "git push origin master"
