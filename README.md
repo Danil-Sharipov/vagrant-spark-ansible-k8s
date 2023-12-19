@@ -78,6 +78,13 @@ curl https://my.webhookrelay.com/webhookrelay/downloads/install-cli.sh | bash
 ```
 3. Логируемся с помощью CLI клиента:
 ```bash
-relay login -k your-token-key -s your-token-secret
+relay login -k your-token-key -s your-token-secret	
 ```
+4. relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
+Forwarding:
+https://mollh1kixyqsoogbbbpd2k.hooks.webhookrelay.com -> http://localhost:8080/github-webhook/
+Starting webhook relay agent...
+2023-12-19 21:04:17.664 INFO    using standard transport...
+2023-12-19 21:04:17.843 INFO    webhook relay ready...  {"host": "my.webhookrelay.com:8080", "buckets": ["816b966c-c659-4964-aa2a-1eb9fbdb5780"]}
+new_line
 ## Monitoring
