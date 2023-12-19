@@ -22,7 +22,7 @@ pipeline {
                   sh "git merge origin/dev"
 
                   // Отправляем изменения в удаленный репозиторий
-                  sh "git push origin master"
+                  sh "git push git push https://github.com/Danil-Sharipov/vagrant-spark-ansible-k8s.git"
             }
         }
                 
