@@ -11,5 +11,19 @@
                     '''
                 }
             }
+            stage('merge'){
+                steps{
+                      // Переходим в ветку master
+                      sh "git checkout master"
+                      // Подтягиваем изменения из удаленного репозитория
+                      sh "git pull origin master"
+
+                      // Вливаем изменения из ветки dev
+                      sh "git merge dev"
+
+                      // Отправляем изменения в удаленный репозиторий
+                      sh "git push origin master"
+                }
+            }
                     
         }
