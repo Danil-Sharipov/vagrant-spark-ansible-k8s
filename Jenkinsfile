@@ -8,6 +8,8 @@ pipeline {
                 sh'''
                 echo '5'
 
+                whoami
+
                 '''
             }
         }
