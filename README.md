@@ -71,4 +71,13 @@ Python-скрипт, который извлекает содержимое ст
 4. В случае успешной настройки при успешной работе пайплайна должны приходить сообщения:
 ![alt text](./screenshots/2-3.png)
 #### Настройка Jenkins для автоматического запуска pipeline
+1. Регистрируемся и получаем токен на https://my.webhookrelay.com/tokens
+2. Установка WebhookRelay:
+```bash
+curl https://my.webhookrelay.com/webhookrelay/downloads/install-cli.sh | bash
+```
+3. Логируемся с помощью CLI клиента:
+```bash
+relay login -k your-token-key -s your-token-secret
+```
 ## Monitoring

@@ -6,7 +6,7 @@
                 steps {
                     git 'https://github.com/Danil-Sharipov/vagrant-spark-ansible-k8s.git'
                     sh'''
-                    vagrant up && ansible-playbook -i inventory playbook.yml 
+                    vagrant destroy -f && vagrant up && ansible-playbook -i inventory playbook.yml 
 
                     '''
                 }
