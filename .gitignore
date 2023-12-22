@@ -4,3 +4,5 @@ join-command
 *.md
 .idea
 monitoring/mariadb/data
+monitoring/zabbix
+
