@@ -2,24 +2,33 @@
 - hosts: master_nodes
   become: true
   tasks:
-  - name: Download Helm
-    wget:
-      url: https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
 
   - name: Extract Helm
-    tar:
-      src: helm-v3.9.3-linux-amd64.tar.gz
+    unarchive:
+      src: https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
+      dest: /home/vagrant
+      remote_src: yes
+
+
+  - name: Move Helm to /usr/local/bin
+    copy:
+      src: /home/vagrant/linux-amd64/helm
       dest: /usr/local/bin
+      owner: 'vagrant'
+      group: 'vagrant'
+      mode: 0755
+      remote_src: yes
 
-#  - name: Move Helm to /usr/local/bin
-#    copy:
-#      src: /tmp/linux-amd64/helm
-#      dest: /usr/local/bin
-#      owner: root
-#      group: root
-#      mode: 0755
+  - name: Remove Linux-AMD64-HELM
+    file:
+      state: absent
+      path: /home/vagrant/linux-amd64
 
-  - name: Remove Helm archive
-    rm:
-      path: /tmp/helm-v3.9.3-linux-amd64.tar.gz
+  - name: 'Change kubeconfig file permission'
+    file:
+      path: /home/vagrant/.kube
+      owner: 'vagrant'
+      group: 'vagrant'
+      mode: 0774
+      recurse: yes
 

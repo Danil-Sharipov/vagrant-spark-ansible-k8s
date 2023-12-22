@@ -98,6 +98,22 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 ![alt text](./screenshots/2-8.png)
 
 ## Monitoring
+```bash
+
+#TASK [Show Token] **************************************************************************************************************************
+#ok: [vm1] => {
+#    "msg": [
+#        "eyJhbGciOiJSUzI1NiIsImtpZCI6IjExcm9ScGpTSVlRbkt2WUwzOWltUHBBYTNrbWVPYTZ3SVlUZ1oxRFhKdEkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2Nv
+#dW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtb25pdG9yaW5nIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Inph
+#YmJpeC1zZXJ2aWNlLWFjY291bnQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiemFiYml4LXNlcnZpY2UtYWNjb3VudCIsImt1YmVy
+#bmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImE3OThjNWExLTg2Y2EtNDJlNC05YmQ3LTU5MDgyM2FiYzgyYSIsInN1YiI6InN5c3RlbTpzZXJ2aWNl
+#YWNjb3VudDptb25pdG9yaW5nOnphYmJpeC1zZXJ2aWNlLWFjY291bnQifQ.lp7ERuC7s_jYtyr3CmnPRfN_gTHJd3PyUC_GT4HOKbLdVIuPgIAl-juupIcvnI4iL2bZMbsMGRbLwrldv
+#QSuj2cJZGwL1tRelOMTMQgbDdVsOB1TeopPVktQn9j7AvAH1mv9mZydZ5FnkNdeg4AQ_eTPAz6A7H2129j6mveqjpmJR3ymrhDrewq46A0u6UQ7sZusOnQ5hyD3eOUAFTv1iXHGci8-h
+#jYVbiH-dxf12P8JTSFF6MGnNyN5xHnIx6uV2UnA04PcABhGLSKm7L14RsizfGjEzPCsjREkfPIU_AdNrjfz8AKTyStcI2J2sh8nhcoMnM6yaDrYVAiuXpKxiQ"
+#    ]
+#}
+
+```
 ## Destroy
 ```bash
 vagrant destroy -f 
