@@ -3,3 +3,4 @@ join-command
 *.db
 *.md
 .idea
+monitoring/mariadb/data

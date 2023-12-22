@@ -1,78 +1,64 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./service/prometheus:/etc/prometheus/
-    container_name: prometheus
-    hostname: prometheus
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-    ports:
-      - "9095:9090"
+
+  zabbix-mariadb:
+    image: mariadb
+    container_name: zabbix-mariadb
+    hostname: zabbix-mariadb
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbixpass
     networks:
       - default
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
 
-  grafana:
-    image: grafana/grafana
-    user: root
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql
+    container_name: zabbix-server
+    hostname: zabbix-server
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+      DB_SERVER_HOST: zabbix-mariadb
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbixpass
+    networks:
+      default:
+        ipv4_address: 172.28.0.254
     depends_on:
-      - prometheus
+      - zabbix-mariadb
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql
+    container_name: zabbix-web
+    hostname: zabbix-web
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+      DB_SERVER_HOST: zabbix-mariadb
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbixpass
+      ZBX_SERVER_HOST: zabbix-server
+      PHP_TZ: "Europe/Moscow"
     ports:
-      - "3000:3000"
-    volumes:
-      - ./service/grafana:/var/lib/grafana
-      - ./service/grafana/provisioning/:/etc/grafana/provisioning/
-    container_name: grafana
-    hostname: grafana
-    restart: unless-stopped
-    environment:
-      TZ: "Europe/Moscow"
+      - 8080:8080
+      - 8443:8443
     networks:
       - default
-
-  node-exporter:
-    image: prom/node-exporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    container_name: exporter
-    hostname: exporter
-    command:
-      - --path.procfs=/host/proc
-      - --path.sysfs=/host/sys
-      - --collector.filesystem.ignored-mount-points
-      - ^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)
-    restart: unless-stopped
-    environment:
-      TZ: "Europe/Moscow"
-    networks:
-      - default
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    restart: unless-stopped
-    privileged: true
-    command:
-      - '-port=8020'
-    networks:
-      - default
-    devices:
-      - /dev/kmsg:/dev/kmsg
+    depends_on:
+      - zabbix-mariadb
+      - zabbix-server
 
 networks:
   default:
-
-
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
