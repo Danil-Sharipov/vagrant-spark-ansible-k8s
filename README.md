@@ -98,3 +98,7 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 ![alt text](./screenshots/2-8.png)
 
 ## Monitoring
+## Destroy
+```bash
+vagrant destroy -f 
+```

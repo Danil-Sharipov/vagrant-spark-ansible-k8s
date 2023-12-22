@@ -28,7 +28,7 @@ def main():
         
         # Check if parsed_data is a list before converting to RDD
         if isinstance(parsed_data, list):
-            spark = SparkSession.builder.appName("WikipediaParser").master("spark://176.26.64.1:7077/").getOrCreate()
+            spark = SparkSession.builder.appName("WikipediaParser").master("spark://127.0.0.1:7077/").getOrCreate()
             
             # Create RDD and transform data for PySpark DataFrame
             rdd = spark.sparkContext.parallelize(parsed_data)

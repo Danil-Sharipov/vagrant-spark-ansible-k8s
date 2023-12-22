@@ -1,0 +1,25 @@
+---
+- hosts: master_nodes
+  become: true
+  tasks:
+  - name: Download Helm
+    wget:
+      url: https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
+
+  - name: Extract Helm
+    tar:
+      src: helm-v3.9.3-linux-amd64.tar.gz
+      dest: /usr/local/bin
+
+#  - name: Move Helm to /usr/local/bin
+#    copy:
+#      src: /tmp/linux-amd64/helm
+#      dest: /usr/local/bin
+#      owner: root
+#      group: root
+#      mode: 0755
+
+  - name: Remove Helm archive
+    rm:
+      path: /tmp/helm-v3.9.3-linux-amd64.tar.gz
+

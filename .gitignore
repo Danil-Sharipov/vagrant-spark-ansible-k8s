@@ -1,3 +1,5 @@
 join-command
 .vagrant
 *.db
+*.md
+.idea

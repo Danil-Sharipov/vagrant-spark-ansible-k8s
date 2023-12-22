@@ -25,7 +25,7 @@ pipeline {
                   sh "git push https://github.com/Danil-Sharipov/vagrant-spark-ansible-k8s.git"
             }
         }
-                
+
     }
      post {
      success {
@@ -51,7 +51,5 @@ pipeline {
         """)
         }
      }
-
- }
-
+     }
 }

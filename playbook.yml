@@ -3,3 +3,4 @@
 - import_playbook: ./playbooks/master.yml
 - import_playbook: ./playbooks/slave.yml
 - import_playbook: ./playbooks/spark.yml
+- import_playbook: ./playbooks/helm.yml

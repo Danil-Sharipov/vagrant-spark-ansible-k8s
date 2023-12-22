@@ -1,90 +1,16 @@
 version: '3.8'
 
 services:
-  web:
-    build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
-    deploy:
-      mode: replicated
-      replicas: 2
-    volumes:
-      - ./app/:/usr/src/app/
-    env_file:
-      - ./.env.dev
-    restart: always
-    networks:
-      - django_net
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 8080:80
-    depends_on:
-      - web
-    restart: always
-    networks:
-      - django_net
-  s3:
-    image: minio/minio:latest
-    ports:
-      - 9000:9000
-      - 9001:9001
-    env_file:
-      - .env
-    healthcheck:
-      test: [ 'CMD', 'curl', 'http://airflow-s3:9000/minio/health/cluster/read' ]
-      start_period: 10s
-      timeout: 5s
-      interval: 3s
-      retries: 100
-    command: server --console-address ":9001" /data
-    networks:
-      - minio_net
-  redis:
-    image: redis:alpine
-    hostname: redis
-    networks:
-      - redis_net
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-      start_period: 10s
-      timeout: 5s
-      interval: 3s
-      retries: 100
-  celery:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    command: "celery -A django_app worker -l info --queues=fila1"
-    depends_on:
-      - web
-      - redis
-    restart: on-failure
-    networks:
-      - redis_net
-  flower:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    ports:
-      - '5555:5555'
-    command: "celery -A django_app flower --address=0.0.0.0"
-    depends_on:
-      - celery
-    networks:
-      - redis_net
-
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus/
+      - ./service/prometheus:/etc/prometheus/
     container_name: prometheus
     hostname: prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
-      - 9095:9090
+      - "9095:9090"
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
@@ -97,10 +23,10 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
-      - ./monitoring/grafana:/var/lib/grafana
-      - ./monitoring/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./service/grafana:/var/lib/grafana
+      - ./service/grafana/provisioning/:/etc/grafana/provisioning/
     container_name: grafana
     hostname: grafana
     restart: unless-stopped
@@ -147,9 +73,6 @@ services:
       - /dev/kmsg:/dev/kmsg
 
 networks:
-  django_net:
-  minio_net:
-  redis_net:
   default:
 
 
