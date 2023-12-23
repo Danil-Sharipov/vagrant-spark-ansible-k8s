@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
         master.vm.hostname = "k8s-master"
         # port-forward testing  
         master.vm.network "forwarded_port", guest: 7077, host: 7077, host_ip: "127.0.0.1"
+        master.vm.network "forwarded_port", guest: 6443, host: 6443, host_ip: "127.0.0.1"
     end
 
     (1..N).each do |i|

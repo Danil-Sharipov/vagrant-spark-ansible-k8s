@@ -98,6 +98,7 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 ![alt text](./screenshots/2-8.png)
 
 ## Monitoring
+1) Первым делом сохраним токен доступа:
 ```bash
 
 #TASK [Show Token] **************************************************************************************************************************
@@ -113,7 +114,15 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 #    ]
 #}
 ```
-## Roles
+2) Запустим zabbix server:
+```bash
+cd monitoring
+docker compose up -d
+```
+И переходим по http://localhost:8080/
+![alt text](./screenshots/3-1.png)
+Логин: admin. Пароль: zabbix.
+3) Настройка мониторинга узлов
 ### Требуется доработка
 ## Destroy
 ```bash
