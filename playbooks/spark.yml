@@ -12,6 +12,7 @@
   - name: Create Spark namespace
     command: kubectl create namespace spark
     become: false
+    ignore_errors: yes
 
   - name: Apply Spark master service
     command: kubectl apply -f ./spark-master-service.yaml -n spark

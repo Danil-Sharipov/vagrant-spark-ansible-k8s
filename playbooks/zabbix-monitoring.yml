@@ -1,0 +1,31 @@
+---
+- hosts: master_nodes
+  become: true
+
+  tasks:
+  - name: Add Zabbix Helm repository
+    become: false
+    command: 'helm repo add zabbix-chart-6.0 https://cdn.zabbix.com/zabbix/integrations/kubernetes-helm/6.0'
+
+  - name: Get Zabbix Helm chart values
+    become: false
+    shell: 'helm show values zabbix-chart-6.0/zabbix-helm-chrt > /home/vagrant/zabbix_values.yaml'
+
+  - name: Create Zabbix namespace
+    command: kubectl create namespace monitoring
+    become: false
+    ignore_errors: yes
+
+  - name: Install Zabbix with custom values
+    become: false
+    command: helm install zabbix zabbix-chart-6.0/zabbix-helm-chrt --dependency-update -f /home/vagrant/zabbix_values.yaml -n monitoring
+    ignore_errors: yes
+
+  - name: Generating token
+    shell: "kubectl get secret zabbix-service-account -n monitoring -o jsonpath={.data.token} | base64 -d && echo"
+    become: false
+    register: token
+    # token.stdout_lines
+  - name: Show Token
+    debug:
+      msg: "{{ token.stdout_lines }}"
