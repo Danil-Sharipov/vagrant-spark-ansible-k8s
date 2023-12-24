@@ -7,20 +7,20 @@ networks:
 services:
   mysql:
     container_name: mysql
-    image: mysql:5.7
+    image: mysql:8.0
     networks:
       - network-zabbix
     volumes:
-      - './zabbix/mysql:/var/lib/data'
+      - './zabbix/mysql:/var/lib/mysql'
     environment:
       - MYSQL_ROOT_PASSWORD=zabbix
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
       - MYSQL_PASSWORD=zabbix
 
   zabbix-server:
     container_name: zabbix-server
-    image: zabbix/zabbix-server-mysql:ubuntu-5.0.1
+    image: zabbix/zabbix-server-mysql:ubuntu-6.0.25
     networks:
       - network-zabbix
     links:
@@ -30,15 +30,16 @@ services:
       - './zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
     environment:
       - DB_SERVER_HOST=mysql
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
+      - MYSQL_ROOT_PASSWORD=zabbix
       - MYSQL_PASSWORD=zabbix
     depends_on:
       - mysql
 
   zabbix-frontend:
     container_name: zabbix-frontend
-    image: zabbix/zabbix-web-apache-mysql:ubuntu-5.0.1
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-6.0.25
     networks:
       - network-zabbix
     links:
@@ -47,10 +48,12 @@ services:
     ports:
       - '8080:8080'
     environment:
+      - ZBX_SERVER_HOST=zabbix-server
       - DB_SERVER_HOST=mysql
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
       - MYSQL_PASSWORD=zabbix
+      - MYSQL_ROOT_PASSWORD=zabbix
       - PHP_TZ=Europe/Moscow
     depends_on:
       - mysql

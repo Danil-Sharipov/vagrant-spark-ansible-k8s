@@ -1,19 +1,19 @@
 # Spark кластер на Kubernetes
 
 ## Deployment
-1) Для изменения количества VM измените переменную N в Vagrantfile.
+- Для изменения количества VM измените переменную N в Vagrantfile.
 ![alt text](./screenshots/1-1.png)
-2) Для изменения количества подов на кластере исправьте replicas в spark-deployment.yaml.
+- Для изменения количества подов на кластере исправьте replicas в spark-deployment.yaml.
 ![alt text](./screenshots/1-2.png)
-3) Выполните команду: 
+- Выполните команду: 
 ```bash
 vagrant up && ansible-playbook -i inventory playbook.yml
 ```
-4) Для проверки подключитесь к мастер ноде по ssh:
+- Для проверки подключитесь к мастер ноде по ssh:
 ```bash
 vagrant ssh k8s-master
 ```
-И выполните следующие команды:
+- И выполните следующие команды:
 ```bash
 kubectl get namespace|grep spark
 #spark                Active   23s
@@ -39,49 +39,49 @@ kubectl get pod -n spark
 # spark-worker-5994548665-wr6bs   1/1     Running   0          3m
 # spark-worker-5994548665-xf6b2   1/1     Running   0          3m
 ```
-5) Проброс портов для проверки мастер ноды:
+- Проброс портов для проверки мастер ноды:
 
 ```bash
 kubectl port-forward deployment/spark-master -n spark 8888:7077 
 ```
 ![alt text](./screenshots/1-5.png)
-6) Для работы с хост машины надо пробросить порт для подключения к spark-master
+- Для работы с хост машины надо пробросить порт для подключения к spark-master
 ```bash
 kubectl port-forward deployment/spark-master -n spark 7077:7077 
 ```
-7) Тестовый код лежит в pyspark_scripts:
+- Тестовый код лежит в pyspark_scripts:
 
 Python-скрипт, который извлекает содержимое страницы Википедии с помощью библиотеки requests, анализирует HTML-контент с помощью BeautifulSoup, извлекает заголовки разделов и, наконец, преобразует извлеченные данные в DataFrame PySpark.
 
 ## Jenkins про триггер, credential и телеграмм бота
 #### Создание телеграмм-бота
 Чтобы создать бота для уведомлений, необходимо выполнить следующие действия:
-1. Найти в Telegram бота @botfather.
-2. Следуя инструкциям бота, создать нового бота.
-3. Сохранить токен бота.
-4. Создаем новый канал и добавляем в него бота с правами администратора
-5. Получаем id чата.
+- Найти в Telegram бота @botfather.
+- Следуя инструкциям бота, создать нового бота.
+- Сохранить токен бота.
+- Создаем новый канал и добавляем в него бота с правами администратора
+- Получаем id чата.
 Токен и id чата понадобятся на следующем этапе.
 #### Добавляем credentials.
-1. Manage Jenkins >> Credentials
-2. Создаем новый domain:
+- Manage Jenkins >> Credentials
+- Создаем новый domain:
 ![alt text](./screenshots/2-1.png)
-3. Добавляем переменные для ID чата и токена бота:
+- Добавляем переменные для ID чата и токена бота:
 ![alt text](./screenshots/2-2.png)
-4. В случае успешной настройки при успешной работе пайплайна должны приходить сообщения:
+- В случае успешной настройки при успешной работе пайплайна должны приходить сообщения:
 ![alt text](./screenshots/2-3.png)
 #### Настройка Jenkins для автоматического запуска pipeline
-1. Регистрируемся и получаем токен на https://my.webhookrelay.com/tokens
+- Регистрируемся и получаем токен на https://my.webhookrelay.com/tokens
 ![alt text](./screenshots/2-4.png)
-2. Установка WebhookRelay:
+- Установка WebhookRelay:
 ```bash
 curl https://my.webhookrelay.com/webhookrelay/downloads/install-cli.sh | bash
 ```
-3. Логируемся с помощью CLI клиента:
+- Логируемся с помощью CLI клиента:
 ```bash
 relay login -k your-token-key -s your-token-secret	
 ```
-4. Включаем переадресацию
+- Включаем переадресацию
 ```bash
 relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 # Forwarding:
@@ -90,15 +90,15 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 # 2023-12-19 21:04:17.664 INFO    using standard transport...
 # 2023-12-19 21:04:17.843 INFO    webhook relay ready...  {"host": "my.webhookrelay.com:8080", "buckets": ["816b966c-c659-4964-aa2a-1eb9fbdb5780"]}
 ```
-5. Включаем WebHook GitHub:
+- Включаем WebHook GitHub:
 ![alt text](./screenshots/2-5.png)
-6. Настраиваем Pipeline:
+- Настраиваем Pipeline:
 ![alt text](./screenshots/2-6.png)
 ![alt text](./screenshots/2-7.png)
 ![alt text](./screenshots/2-8.png)
 
-## Monitoring
-1) Первым делом сохраним токен доступа:
+## Мониторинг
+- Первым делом сохраним токен доступа:
 ```bash
 
 #TASK [Show Token] **************************************************************************************************************************
@@ -114,7 +114,7 @@ relay forward --bucket github-jenkins http://localhost:8080/github-webhook/
 #    ]
 #}
 ```
-2) Запустим zabbix server:
+- Запустим zabbix server:
 ```bash
 cd monitoring
 docker compose up -d
@@ -122,9 +122,12 @@ docker compose up -d
 И переходим по http://localhost:8080/
 ![alt text](./screenshots/3-1.png)
 Логин: admin. Пароль: zabbix.
-3) Настройка мониторинга узлов
-### Требуется доработка
+- Настройка мониторинга узлов
+Создадим новый хост и внесем токен доступа:
+![alt text](./screenshots/3-2.png)
+![alt text](./screenshots/3-3.png)
 ## Destroy
 ```bash
 vagrant destroy -f 
 ```
+
