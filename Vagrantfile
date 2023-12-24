@@ -15,8 +15,9 @@ Vagrant.configure("2") do |config|
         master.vm.network "private_network", ip: "192.168.56.10"
         master.vm.hostname = "k8s-master"
         # port-forward testing  
-        master.vm.network "forwarded_port", guest: 7077, host: 7077, host_ip: "127.0.0.1"
-        master.vm.network "forwarded_port", guest: 6443, host: 6443, host_ip: "127.0.0.1"
+        master.vm.network "forwarded_port", guest: 7077, guest_ip: "127.0.0.1", host: 7077, host_ip: "127.0.0.1", auto_correct: true
+        master.vm.network "forwarded_port", guest: 6443, guest_ip: "127.0.0.1", host: 6443, host_ip: "127.0.0.1", auto_correct: true
+        # ssh -L 12345:localhost:6443 vagrant@172.26.64.1 -p 2222
     end
 
     (1..N).each do |i|

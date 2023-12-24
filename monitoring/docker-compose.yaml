@@ -12,6 +12,8 @@ services:
       - network-zabbix
     volumes:
       - './zabbix/mysql:/var/lib/mysql'
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # localhost -> host.docker.internal
     environment:
       - MYSQL_ROOT_PASSWORD=zabbix
       - MYSQL_DATABASE=zabbix_db
@@ -23,6 +25,8 @@ services:
     image: zabbix/zabbix-server-mysql:ubuntu-6.0.25
     networks:
       - network-zabbix
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     links:
       - mysql
     restart: always
@@ -55,6 +59,8 @@ services:
       - MYSQL_PASSWORD=zabbix
       - MYSQL_ROOT_PASSWORD=zabbix
       - PHP_TZ=Europe/Moscow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - mysql
 

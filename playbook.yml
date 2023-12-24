@@ -9,9 +9,12 @@
   become: true
   roles:
     - roles/master
-    - roles/zabbix-monitoring
 - hosts: worker_nodes
   become: true
   roles:
     - roles/slave
 - import_playbook: ./playbooks/spark.yml
+- hosts: master_nodes
+  become: true
+  roles:
+    - roles/zabbix-monitoring
