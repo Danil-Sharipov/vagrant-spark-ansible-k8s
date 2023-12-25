@@ -122,10 +122,14 @@ docker compose up -d
 И переходим по http://localhost:8080/
 ![alt text](./screenshots/3-1.png)
 Логин: admin. Пароль: zabbix.
-- Настройка мониторинга узлов
+- Настройка мониторинга узлов кластера Kubernetes
 Создадим новый хост и внесем токен доступа:
 ![alt text](./screenshots/3-2.png)
 ![alt text](./screenshots/3-3.png)
+- Настройка мониторинга состояния кластера Kubernetes
+Создадим новый хост и внесем токен доступа:
+![alt text](./screenshots/3-4.png)
+![alt text](./screenshots/3-5.png)
 ## Destroy
 ```bash
 vagrant destroy -f 
