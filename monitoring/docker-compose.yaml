@@ -4,25 +4,30 @@ networks:
   network-zabbix:
     driver: bridge
 
+
 services:
   mysql:
     container_name: mysql
-    image: mysql:5.7
+    image: mysql:8.0
     networks:
       - network-zabbix
     volumes:
-      - './zabbix/mysql:/var/lib/data'
+      - './zabbix/mysql:/var/lib/mysql'
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # localhost -> host.docker.internal
     environment:
       - MYSQL_ROOT_PASSWORD=zabbix
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
       - MYSQL_PASSWORD=zabbix
 
   zabbix-server:
     container_name: zabbix-server
-    image: zabbix/zabbix-server-mysql:ubuntu-5.0.1
+    image: zabbix/zabbix-server-mysql:ubuntu-6.0.25
     networks:
       - network-zabbix
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     links:
       - mysql
     restart: always
@@ -30,15 +35,16 @@ services:
       - './zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
     environment:
       - DB_SERVER_HOST=mysql
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
+      - MYSQL_ROOT_PASSWORD=zabbix
       - MYSQL_PASSWORD=zabbix
     depends_on:
       - mysql
 
   zabbix-frontend:
     container_name: zabbix-frontend
-    image: zabbix/zabbix-web-apache-mysql:ubuntu-5.0.1
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-6.0.25
     networks:
       - network-zabbix
     links:
@@ -47,27 +53,31 @@ services:
     ports:
       - '8080:8080'
     environment:
+      - ZBX_SERVER_HOST=zabbix-server
       - DB_SERVER_HOST=mysql
-      - MYSQL_DATABASE=zabbix
+      - MYSQL_DATABASE=zabbix_db
       - MYSQL_USER=zabbix
       - MYSQL_PASSWORD=zabbix
+      - MYSQL_ROOT_PASSWORD=zabbix
       - PHP_TZ=Europe/Moscow
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - mysql
 
-#  grafana:
-#    container_name: grafana
-#    image: grafana/grafana
-#    networks:
-#      - network-zabbix
-#    links:
-#      - mysql
-#      - zabbix-server
-#    restart: always
-#    ports:
-#      - '3000:3000'
-#    environment:
-#      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
-#    depends_on:
-#      - mysql
-#      - zabbix-server
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    networks:
+      - network-zabbix
+    links:
+      - mysql
+      - zabbix-server
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
+    depends_on:
+      - mysql
+      - zabbix-server
