@@ -7,7 +7,7 @@
 ![alt text](./screenshots/1-2.png)
 - Выполните команду: 
 ```bash
-vagrant up && ansible-playbook -i inventory playbook.yml
+vagrant up && ansible-playbook playbook.yml
 ```
 - Для проверки подключитесь к мастер ноде по ssh:
 ```bash
